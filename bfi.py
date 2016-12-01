@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-bfi.py 0.1
+bfi.py 0.2
 Copyright (c) 2016, Marc Sances
 All rights reserved.
 
@@ -68,12 +68,16 @@ class BfVM():
             self.rc=self.rc+1                                         # register right
         elif (ins==","):
             c=sys.stdin.read(1)
-            self.ram[self.bra+self.rc]=ord(c) if len(c)>0 else 0         # read
+            self.ram[self.bra+self.rc]=ord(c) if len(c)>0 else 0      # read
         elif (ins=="."):
             sys.stdout.write(unichr(self.ram[self.bra+self.rc]))      # write
         elif (ins=="["):     
-            self.ram[self.bsa+self.sp]=self.pc-1                      # export context to stack
-            self.sp=self.sp+1                                         # increment stack pointer
+            if (self.ram[self.bra+self.rc]!=0):
+                self.ram[self.bsa+self.sp]=self.pc-1                  # export context to stack
+                self.sp=self.sp+1                                     # increment stack pointer
+            else:
+                while (self.ram[self.pc]!="]" and self.ram[self.pc]!="\n"):
+                    self.pc=self.pc+1                                 # move to end of array
         elif (ins=="]"):                                              # loop end
             self.sp=self.sp-1                                     # decrement stack pointer
             if (self.ram[self.bra+self.rc]!=0):                       # if condition is not met
