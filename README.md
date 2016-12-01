@@ -6,7 +6,7 @@ It loads the machine ram into a list of ints, each representing a register of th
 
 Upon initialization, the first instruction is loaded and processed and further on. Branching is solved with the stack.
 
-This is a quick 1-hour implementation with a lot of "however's" on it, that might get fixed some day.
+This is a quick 1-afternoon implementation with a lot of "however's" on it, that might get fixed some day.
 
 # usage
 
