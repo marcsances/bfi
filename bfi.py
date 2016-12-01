@@ -58,15 +58,15 @@ class BfVM():
         """Instruction decode and execution"""
         self.pc=self.pc+1                                             # increment program counter beforehand, so that it can be modified by ]
         if (ins=="+"):
-            self.ram[self.bra+self.rc]=self.ram[self.bra+self.rc]+1   # increment
+            self.ram[self.bra+self.rc]=int(self.ram[self.bra+self.rc])+1   # increment
         elif (ins=="-"):
-            self.ram[self.bra+self.rc]=self.ram[self.bra+self.rc]-1   # decrement
+            self.ram[self.bra+self.rc]=int(self.ram[self.bra+self.rc])-1   # decrement
         elif (ins=="<"):
             self.rc=self.rc-1                                         # register left
         elif (ins==">"):
             self.rc=self.rc+1                                         # register right
         elif (ins==","):
-            self.ram[self.bra+self.rc]=sys.stdin.read(1)              # read
+            self.ram[self.bra+self.rc]=ord(sys.stdin.read(1))         # read
         elif (ins=="."):
             sys.stdout.write(unichr(self.ram[self.bra+self.rc]))      # write
         elif (ins=="["):     
@@ -84,6 +84,7 @@ class BfVM():
 
     def cycle(self):
         """Emulates a BF CPU cycle"""
+        self.dump()
         ins=self.ifc()
         return self.idx(ins)
 
