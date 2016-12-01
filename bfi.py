@@ -16,18 +16,19 @@ Redistribution and use in source and binary forms, with or without modification,
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-import sys
+import sys,re
 class BfVM(): 
-    def __init__(self):
+    def __init__(self,debug):
         self.RAMSIZE=8*1024*1024             # 8M ram
         self.STACKSIZE=1024                  # 1K stack
+        self.DEBUG=debug
 
     def initram(self):
         self.ram=[0]*self.RAMSIZE
 
     def loadfile(self,file,address):
         with open(file) as f:
-            program=list(f.read().replace("\n","")) + ["\n"]                                         # load program and append end flag
+            program=list(re.sub('[^<>,.+\-\[\]]', '', f.read())) + ["\n"]                                         # load program and append end flag
             self.ram=self.ram[:address] + program + self.ram[address+len(program):]
             return len(program)
 
@@ -74,8 +75,8 @@ class BfVM():
             self.ram[self.bsa+self.sp]=self.pc-1                      # export context to stack
             self.sp=self.sp+1                                         # increment stack pointer
         elif (ins=="]"):                                              # loop end
-            if (self.ram[self.bra+self.rc]!=0):                       # if condition is met
-                self.sp=self.sp-1                                     # decrement stack pointer
+            self.sp=self.sp-1                                     # decrement stack pointer
+            if (self.ram[self.bra+self.rc]!=0):                       # if condition is not met
                 self.pc=int(self.ram[self.bsa+self.sp])               # recover context
         elif (ins=="\n"):
             return False
@@ -85,7 +86,8 @@ class BfVM():
 
     def cycle(self):
         """Emulates a BF CPU cycle"""
-        self.dump()
+        if (self.DEBUG):
+            self.dump()
         ins=self.ifc()
         return self.idx(ins)
 
@@ -93,5 +95,6 @@ if __name__=="__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("program")
+    parser.add_argument("-d",dest="debug",action="store_true")
     args=parser.parse_args()
-    BfVM().loadvm(args.program)
+    BfVM(args.debug).loadvm(args.program)
