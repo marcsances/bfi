@@ -16,7 +16,7 @@ Store the program into a file (for example, the supplied helloworld.B). Then loa
  
 # debugging and stuff
 
-For now no debugging is supported, but you can modify the source and add self.dump() right before first instruction of method cycle() to keep control of the internal VM registers and the state of the stack.
+You can call the program with the optional -d option to enable debug dumping. It prints the value of the registers and the content of the stack for each cycle.
 
 | Register | Meaning                                               |
 |----------|-------------------------------------------------------|
