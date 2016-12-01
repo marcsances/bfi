@@ -1,6 +1,6 @@
 # bfi: yet another Brainf### python interpreter
 
-bfi is a quick and dirty python interpreter for the [Brainf### language](https://en.wikipedia.org/wiki/Brainfuck]).
+bfi is a quick and dirty python interpreter for the [Brainf### language](https://en.wikipedia.org/wiki/Brainfuck).
 
 It loads the machine ram into a list of ints, each representing a register of the computer. The program is then loaded at the very beginning of the RAM, and a stack is loaded right after. After the stack, the data itself is loaded.
 
