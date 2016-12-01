@@ -32,12 +32,12 @@ class BfVM():
             return len(program)
 
     def dump(self):
-        print "pc=" + str(self.pc) + ", bsa=" + str(self.bsa) + ", sp=" + str(self.sp) + ", bra=" + str(self.bra) + ", rc=" + \
-         str(self.rc) + ", ci=" + str(self.ram[self.pc]) + ", cr=" + str(self.ram[self.bra+self.rc])
+        sys.stderr.write("pc=" + str(self.pc) + ", bsa=" + str(self.bsa) + ", sp=" + str(self.sp) + ", bra=" + str(self.bra) + ", rc=" + \
+         str(self.rc) + ", ci=" + str(self.ram[self.pc]) + ", cr=" + str(self.ram[self.bra+self.rc]) + "\n") 
         self.printstack()
     
     def printstack(self):
-        print "stack: " + str(self.ram[self.bsa:(self.bsa+self.sp)])
+        sys.stderr.write("stack: " + str(self.ram[self.bsa:(self.bsa+self.sp)]) + "\n")
 
     def loadvm(self,init):
         self.initram()
@@ -66,7 +66,8 @@ class BfVM():
         elif (ins==">"):
             self.rc=self.rc+1                                         # register right
         elif (ins==","):
-            self.ram[self.bra+self.rc]=ord(sys.stdin.read(1))         # read
+            c=sys.stdin.read(1)
+            self.ram[self.bra+self.rc]=ord(c) if len(c)>0 else 0         # read
         elif (ins=="."):
             sys.stdout.write(unichr(self.ram[self.bra+self.rc]))      # write
         elif (ins=="["):     
