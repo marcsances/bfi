@@ -76,8 +76,7 @@ class BfVM():
                 self.ram[self.bsa+self.sp]=self.pc-1                  # export context to stack
                 self.sp=self.sp+1                                     # increment stack pointer
             else:
-                while (self.ram[self.pc]!="]" and self.ram[self.pc]!="\n"):
-                    self.pc=self.pc+1                                 # move to end of array
+                self.skiploop()
         elif (ins=="]"):                                              # loop end
             self.sp=self.sp-1                                     # decrement stack pointer
             if (self.ram[self.bra+self.rc]!=0):                       # if condition is not met
@@ -87,6 +86,23 @@ class BfVM():
         else:
             pass                                                      # other token
         return True
+
+    def _s(self):
+        if (self.ram[self.pc]=="["):
+            r=1                                                       # add one recursion level
+        elif (self.ram[self.pc]=="]"):
+            r=-1                                                      # remove one recursion level
+        else:
+            r=0                                                       # depth is untouched
+        self.pc=self.pc+1                                             # skip to next instruction
+        return r
+
+    def skiploop(self):
+        depth=1
+        md=1
+        while (depth>0 and not self.ram[self.pc]=="\n"):
+            depth=depth+self._s()
+            md=depth if depth>md else md
 
     def cycle(self):
         """Emulates a BF CPU cycle"""
