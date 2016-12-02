@@ -99,10 +99,8 @@ class BfVM():
 
     def skiploop(self):
         depth=1
-        md=1
         while (depth>0 and not self.ram[self.pc]=="\n"):
             depth=depth+self._s()
-            md=depth if depth>md else md
 
     def cycle(self):
         """Emulates a BF CPU cycle"""
