@@ -30,6 +30,16 @@ You can call the program with the optional -d option to enable debug dumping. It
 | ci       | Current Instruction (value of data pointed by pc)     |
 | cr       | Current Register    (value of data pointed by bra+rc) |
 
+Protip: open an additional terminal emulator, type tty to get the tty device file, then try this:
+
+```
+python bfi.py program.B -d 2>/dev/pts/3
+```
+
+where /dev/pts/3 is the device file for the additional terminal you opened.
+
+This will run the program in the first terminal, and show debug information in the second terminal.
+
 # what works?
 
 Some working examples are included. Performance in this interpreter is not priority, my only aim with this small project was to understand the inner workings of the language and getting where to start to understanding better how VMs work.
