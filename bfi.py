@@ -68,6 +68,8 @@ class BfVM():
             self.rc=self.rc+1                                         # register right
         elif (ins==","):
             c=sys.stdin.read(1)
+            if c=='':
+                sys.exit(0)
             self.ram[self.bra+self.rc]=ord(c) if len(c)>0 else 0      # read
         elif (ins=="."):
             sys.stdout.write(unichr(self.ram[self.bra+self.rc]))      # write
